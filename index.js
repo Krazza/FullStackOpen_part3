@@ -24,6 +24,14 @@ let persons = [
     }
 ];
 
+app.get("/api/info", (request, response) => {
+    let day = new Date();
+    let fullDate = `Year: ${day.getFullYear()}, month: ${day.getMonth()}, day: ${day.getDate()} \n Time: ${day.getHours()}:${day.getMinutes()}:${day.getSeconds()}`;
+    response.send(`
+    <p>Phonebook has info for ${persons.length} people.</p>
+    <p>${fullDate}</p>`);
+});
+
 app.get("/api/persons", (request, response) => {
     response.json(persons);
 });
