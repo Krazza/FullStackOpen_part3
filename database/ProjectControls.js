@@ -20,8 +20,8 @@ const GetPhonebook = () =>{
         console.log("Phonebook:");
         persons.forEach(person =>{
         console.log(`Name: ${person.name} | number: ${person.number}`);
-        })
-        mongoose.connection.close()})
+        return persons;})
+    mongoose.connection.close()})
 }
 
 module.exports = {

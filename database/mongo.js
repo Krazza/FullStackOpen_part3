@@ -8,10 +8,16 @@ if (process.argv.length<3){
 }
 
 mongoose.set('strictQuery',false)
-mongoose.connect(URI);
+mongoose.connect(URI)
+    .then(result => {
+        console.log('connected to MongoDB')
+    })
+    .catch(error => {
+        console.log('error connecting to MongoDB:', error.message)
+    });
 
 if(process.argv.length === 3){
-    GetPhonebook();
+    console.log(GetPhonebook());
 } else {
     SaveNewPerson(process.argv[3], process.argv[4]);
 }
