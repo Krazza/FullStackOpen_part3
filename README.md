@@ -1,3 +1,4 @@
 # Phonebook app.
-## Link:
-### https://nodephonebooktask.onrender.com/api/persons
+## Links:
+### Base link: https://nodephonebooktask.onrender.com
+### API link: https://nodephonebooktask.onrender.com/api/persons
