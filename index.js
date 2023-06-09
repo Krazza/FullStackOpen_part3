@@ -2,11 +2,13 @@ require("dotenv").config();
 const express = require("express");
 const morgan = require("morgan");
 const cors = require("cors");
-const mongoose = require("mongoose");
-const { Person } = require("./database/ProjectModels");
-const { URI } = require("./database/config");
 
 const app = express();
+
+const { ConnectDatabase } = require("./models/person");
+const { Person } = require("./database/ProjectModels");
+ConnectDatabase();
+
 
 morgan.token('body', req => {
     if(req.method == "POST")
@@ -17,22 +19,6 @@ app.use(morgan(':method :url :status :response-time ms - :res[content-length] :b
 app.use(cors());
 app.use(express.static('build'))
 app.use(express.json());
-
-mongoose.set('strictQuery',false)
-mongoose.connect(URI)
-  .then(result => {
-    console.log('connected to MongoDB')
-  })
-  .catch((error) => {
-    console.log('error connecting to MongoDB:', error.message)
-})
-
-let persons = [];
-
-const GenerateID = () => {
-    const newID = Math.floor(Math.random() * 100);
-    return newID;
-}
 
 app.get("/api/info", (request, response) => {
     Person.find({}).then(persons => {
@@ -64,15 +50,12 @@ app.post(`/api/persons`, (request, response) => {
         return response.status(400).json({error : `name is missing`});
     } else if(!body.number){
         return response.status(400).json({error : `number is missing`});
-    } if(persons.some(person => person.name === body.name)){
-        return response.status(409).json({error : `user is already present in the phonebook`});
     } 
 
     const person = new Person({
         name : body.name,
         number : body.number
     })
-
     person.save().then(savedPerson => {
         response.json(savedPerson);
     })
