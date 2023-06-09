@@ -23,7 +23,7 @@ app.use(express.json());
 app.get("/api/info", (request, response, next) => {
     Person.find({}).then(persons => {
         let day = new Date();
-        let fullDate = `Year: ${day.getFullYear()}, month: ${day.getMonth()}, day: ${day.getDate()} \n Time: ${day.getHours()}:${day.getMinutes()}:${day.getSeconds()}`;
+        let fullDate = `Year: ${day.getFullYear()}, month: ${day.getMonth() + 1}, day: ${day.getDate()} \n Time: ${day.getHours()}:${day.getMinutes()}:${day.getSeconds()}`;
         response.send(`
         <p>Phonebook has info for ${persons.length} people.</p>
         <p>${fullDate}</p>`);
@@ -65,6 +65,23 @@ app.post(`/api/persons`, (request, response, next) => {
     })
     .catch(error => next(error))
 });
+
+app.put(`/api/persons/:id`, (request, response, next) => {
+    const body = request.body;
+
+    const person = {
+        name : body.name,
+        number : body.number
+    }
+
+    Person.findOneAndUpdate({name : person.name}, person , { new: true })
+    .then(person => {
+        if (person) {
+            response.json(person);
+        } else {
+            response.status(404).end()}})
+    .catch(error => next(error))
+})
 
 app.delete(`/api/persons/:id`, (request, response, next) => {
     Person.findByIdAndRemove(request.params.id)
